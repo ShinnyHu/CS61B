@@ -27,3 +27,12 @@ javac synthesizer/TestGuitarString.java
 java synthesizer/TestGuitarString
 ```
 *Should play an A-note on a guitar string.*
+
+### Project 2: CS61BYoG
+
+```
+javac byog/TileEngine/*.java
+javac byog/Core/*.java
+java byog/Core/Main
+```
+*Should start the game front.*
