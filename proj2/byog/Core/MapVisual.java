@@ -35,20 +35,21 @@ public class MapVisual {
         this.ter = t;
         this.width = w;
         this.height = h;
-        ter.initialize(width, height);
-        finalWorld = new TETile[width][height];
+        ter.initialize(width, height + 3);
+        finalWorld = new TETile[width][height + 3];
         random = new Random(seed);
+
     }
 
     public MapVisual(TETile[][] world, TERenderer ter) {
         finalWorld = world;
         this.ter = ter;
         this.width = world.length;
-        this.height = world[0].length;
-        ter.initialize(width, height);
+        this.height = world[0].length - 3;
+        ter.initialize(width, height + 3);
     }
 
-    /** Return the generated fianl world. */
+    /** Return the generated final world. */
     public TETile[][] getWorld() {
         return finalWorld;
     }
@@ -58,7 +59,7 @@ public class MapVisual {
      */
     public void initWorld() {
         for(int i = 0; i < width; i++) {
-            for(int j = 0; j < height; j++) {
+            for(int j = 0; j < height + 3; j++) {
                 finalWorld[i][j] = Tileset.NOTHING;
             }
         }
@@ -106,6 +107,20 @@ public class MapVisual {
         }
     }
 
+    /** Generate random width and height for rooms.
+     *  pos: x or y coordinate
+     *  available: the space that can be placed
+     */
+    public int generateRandomLenForRoom(int pos, int available) {
+        int r = random.nextInt(available - pos);
+
+        // Make sure the room is not too small or too large.
+        while(r < 4 || r > width / 8) {
+            r = random.nextInt(available - pos);
+        }
+        return r;
+    }
+
     public void multipleHallways(int nVertical ,int nHorizon) {
         for(int i = 0; i < nVertical; i++) {
             Position p = generateRandomPos(3);
@@ -126,24 +141,8 @@ public class MapVisual {
     }
 
     public Position generateRandomPos(int spaceNeeded) {
-        Position p =
-                new Position(random.nextInt(width - spaceNeeded),
+        return new Position(random.nextInt(width - spaceNeeded),
                         random.nextInt(height - spaceNeeded));
-        return p;
-    }
-
-    /** Generate random width and height for rooms.
-     *  pos: x or y coordinate
-     *  available: the space that can be placed
-     */
-    public int generateRandomLenForRoom(int pos, int available) {
-        int r = random.nextInt(available - pos);
-
-        // Make sure the room is not too small or too large.
-        while(r < 4 || r > width / 8) {
-            r = random.nextInt(available - pos);
-        }
-        return r;
     }
 
 
@@ -199,17 +198,45 @@ public class MapVisual {
         } else {
             mov.set();
         }
-        ter.renderFrame(finalWorld);
+        updateImg();
+
 
         while (!mov.player.near(mov.door)){
+            mouseListen();
             char c = mov.getIns();
             finalWorld = mov.move(c);
             System.out.print(c);
-            ter.renderFrame(finalWorld);
+            updateImg();
         }
         if(mov.player.near(mov.door)) {
             StdDraw.pause(2000);
         }
+    }
+
+    public void mouseListen() {
+        updateImg();
+        while (true) {
+            Position mouse = listen();
+            if(inImg(mouse)) {
+                String s = finalWorld[mouse.x][mouse.y].description();
+                drawGUI(s);
+            } else {
+                drawGUI("");
+            }
+
+            if(StdDraw.hasNextKeyTyped()) {
+                break;
+            }
+        }
+    }
+
+    public boolean inImg(Position p) {
+        return (p.x >= 0 && p.x < width) && (p.y >= 0 && p.y < height);
+    }
+
+    public void updateImg() {
+        ter.renderFrame(finalWorld);
+//        drawLine();
     }
 
     public void startGame() {
@@ -219,7 +246,6 @@ public class MapVisual {
         findLargestSpace();
         deleteFragment();
         moverAround(false);
-        ter.renderFrame(getWorld());
 
         WinGame win = new WinGame(40, 40);
         win.drawFrame();
@@ -227,32 +253,51 @@ public class MapVisual {
 
     public void loadGame() {
         moverAround(true);
-        ter.renderFrame(getWorld());
 
         WinGame win = new WinGame(40, 40);
         win.drawFrame();
     }
 
+    public Position listen() {
+        int x = (int)StdDraw.mouseX();
+        int y = (int)StdDraw.mouseY();
+        return new Position(x,y);
+    }
+
+    public void drawLine() {
+        StdDraw.setPenColor(Color.white);
+        StdDraw.line(0, height, width, height);
+        StdDraw.show();
+    }
+
+    public void drawGUI(String s) {
+        for (int x = 0; x < finalWorld.length; x += 1) {
+            for (int y = height; y < height + 3; y += 1) {
+                finalWorld[x][y].draw(x, y);
+            }
+        }
+        StdDraw.setPenColor(Color.white);
+        StdDraw.textLeft(1, height + 1, s);
+        StdDraw.show();
+    }
 
     public static void main(String[] args) {
+
+
         TERenderer ter = new TERenderer();
         MapVisual m = new MapVisual(args[0], ter, 60, 30);
 
-        System.out.println(m.finalWorld.length); // output:60
-        System.out.println(m.finalWorld[0].length); // output:30
-
+        ter.initialize(m.getWorld().length, m.getWorld()[0].length);
 
         m.initWorld();
         m.multipleRooms(30);
         m.multipleHallways(20, 20);
 
-        System.out.println("The largest connected floor: " + m.findLargestSpace());
+        m.findLargestSpace();
 
         m.deleteFragment();
 
         m.moverAround(false);
-
-        ter.renderFrame(m.getWorld());
     }
 
 
