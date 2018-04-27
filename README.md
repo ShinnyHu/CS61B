@@ -43,3 +43,4 @@ java byog/Core/Main
 javac hw2/*.java
 java hw2/PercolationStats
 ```
+TO DO: a small bug (backlash)
