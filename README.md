@@ -36,3 +36,10 @@ javac byog/Core/*.java
 java byog/Core/Main
 ```
 *Should start the game front.*
+
+### HW 2: Percolation
+
+```
+javac hw2/*.java
+java hw2/PercolationStats
+```
