@@ -44,3 +44,12 @@ javac hw2/*.java
 java hw2/PercolationStats
 ```
 TO DO: a small bug (backlash)
+
+### Lab 9: Tree Maps vs. Hash Maps
+
+```
+javac lab9/*.java
+java lab9/BSTMap 
+java lab9/MyHashMap
+```
+TO DO: clean some nasty code!
