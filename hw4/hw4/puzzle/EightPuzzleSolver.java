@@ -2,6 +2,10 @@ package hw4.puzzle;
 
 import hw4.algs4.*;
 
+/**
+* Author: Josh Hug
+*/
+
 public class EightPuzzleSolver {
     /***********************************************************************
      * Test routine for your Solver class. Uncomment and run to test

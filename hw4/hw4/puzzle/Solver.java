@@ -31,30 +31,6 @@ public final class Solver {
         sol.push(initial);
     }
 
-//    public boolean contains(WorldState worldState) {
-//        for(Node n : path) {
-//            if(n.curr().equals(worldState)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
-//    public WorldState solve(WorldState w) {
-//        if(w.isGoal()) {
-//            totalmov += 1;
-//            return w;
-//        }
-//        moves += 1;
-//        for (WorldState neighbor : w.neighbors()) {
-//            if(!neighbor.equals(w)) {
-//                path.insert(n);
-//            }
-//
-//        }
-//    }
-
-
     public Node solve(Node node, int moves) {
         marked.add(node.curr());
         if(node.curr().isGoal()) {
@@ -62,15 +38,12 @@ public final class Solver {
             return node;
         }
         for (WorldState neighbor : node.curr().neighbors()) {
-//            System.out.println(neighbor.toString());
             if(neighbor.isGoal()) {
                 totalmov += 1;
                 sol.push(neighbor);
                 return node;
             }
             if(!neighbor.equals(node.prev()) && !marked.contains(neighbor)) {
-
-//                System.out.print(neighbor + " ");
 
                 Node n = new Node(node, neighbor, moves + 1);
                 path.insert(n);
@@ -79,6 +52,7 @@ public final class Solver {
             }
         }
 
+        // Some outputs to help debug:
 //        System.out.println("\nenque: " + enqueue);
 //        for (Node n : path) {
 //            System.out.print(n.curr() + ",diff:" + (n.cost() - n.moves) + ",m:" + n.moves + "  ");
