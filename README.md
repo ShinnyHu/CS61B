@@ -53,3 +53,14 @@ java lab9/BSTMap
 java lab9/MyHashMap
 ```
 TO DO: clean some nasty code!
+
+### HW 4: 8 Puzzle
+
+```
+javac hw4/*/*.java
+java hw4.test.TestSolver //Execute all problems 
+java hw4.puzzle.EightPuzzleSolver input/puzzle05.txt //Solve just one 8problem
+java hw4.puzzle.WordPuzzleSolver //Solve one word problem
+```
+
+TO DO: a more thorough review on code construction and debugging.
