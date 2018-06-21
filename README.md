@@ -64,3 +64,11 @@ java hw4.puzzle.WordPuzzleSolver //Solve one word problem
 ```
 
 TO DO: a more thorough review on code construction and debugging.
+
+### Lab 12: Merge Sort and Quick Sort
+
+```
+javac *.java
+java MergeSort
+java QuickSort
+```
